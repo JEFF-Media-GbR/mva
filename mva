@@ -10,6 +10,7 @@ import os.path
 parser = argparse.ArgumentParser()
 parser.add_argument("extension", help="extension of the files you wish to move")
 #parser.add_argument("-d","--delete-dirs", help="delete leftover empty directories",action="store_true")
+parser.add_argument("-s","--simulate", help="no action; just simulate behaviour",action="store_true")
 parser.add_argument("-v","--verbose", help="increase output verbosity",action="store_true")
 
 args = parser.parse_args()
@@ -20,5 +21,7 @@ if(args.verbose):
 for dirpath, dirnames, filenames in os.walk("."):
 		for filename in [f for f in filenames if f.endswith("."+args.extension)]:
 			path = os.path.join(dirpath,filename)
-      print "moving "+path
-			os.rename(path, os.path.join(".",filename))
+			if args.simulate or args.verbose:
+				print "moving "+path
+			if not args.simulate:
+				os.rename(path, os.path.join(".",filename))
